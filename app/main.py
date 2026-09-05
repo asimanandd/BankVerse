@@ -1,17 +1,16 @@
 from fastapi import FastAPI
-from sqlalchemy import text
 
-from app.db.database import engine
+from app.api.user import router as user_router
+from app.api.auth import router as auth_router
 
-app = FastAPI()
+app = FastAPI(title="BankVerse API")
+
+app.include_router(user_router)
+app.include_router(auth_router)
+
 
 @app.get("/")
 def home():
-    with engine.connect() as connection:
-        result = connection.execute(text("SELECT version();"))
-        version = result.scalar()
-
     return {
-        "message": "BankVerse API",
-        "database": version
+        "message": "Welcome to BankVerse"
     }
