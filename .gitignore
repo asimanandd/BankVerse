@@ -29,3 +29,5 @@ htmlcov/
 
 # Database
 *.db
+
+users&passwords.txt

@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import Session
-from app.models.user import User
 from app.models.user import User
 from app.schemas.user import UserCreate
 from app.utils.security import hash_password
+from app.services.account_service import AccountService
 
 class UserService:
     @staticmethod
@@ -29,5 +28,10 @@ class UserService:
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
+
+# Automatically create a bank account
+        AccountService.create_account(
+           db=db,
+           user_id=db_user.id)
+
         return db_user
-    
