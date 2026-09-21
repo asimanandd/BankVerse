@@ -53,7 +53,7 @@ class AccountService:
 
 
     @staticmethod
-    def deposit(db: Session, user_id: int, amount: float):
+    def deposit(db: Session, user_id: int, amount: Decimal):
 
         account = (
             db.query(Account)
@@ -68,7 +68,7 @@ class AccountService:
 
         TransactionService.create_transaction(
             db=db,
-            account_id=account.id,
+            receiver_account_id=account.id,
             transaction_type="DEPOSIT",
             amount=amount
         )
@@ -95,7 +95,7 @@ class AccountService:
 
         TransactionService.create_transaction(
             db=db,
-            account_id=account.id,
+            sender_account_id=account.id,
             transaction_type="WITHDRAW",
             amount=amount
         )

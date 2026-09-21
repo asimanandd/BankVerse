@@ -31,3 +31,5 @@ htmlcov/
 *.db
 
 users&passwords.txt
+
+users.txt
