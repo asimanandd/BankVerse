@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: bankverse-api
+
+spec:
+  {{- if not .Values.hpa.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+
+  selector:
+    matchLabels:
+      app: bankverse-api
+
+  template:
+    metadata:
+      labels:
+        app: bankverse-api
+
+    spec:
+      containers:
+        - name: bankverse-api
+
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - containerPort: 8000
+
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://postgres:postgres123@host.docker.internal:5432/bankverse"
+
+            - name: SECRET_KEY
+              value: "bankverse-secret-key"
+
+            - name: ALGORITHM
+              value: "HS256"
+
+            - name: ACCESS_TOKEN_EXPIRE_MINUTES
+              value: "30"

@@ -1,0 +1,32 @@
+replicaCount: 4
+
+image:
+  repository: bankverse-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8000
+  targetPort: 8000
+  nodePort: 30080
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  cpuUtilization: 50
+
+env:
+  databaseUrl: "postgresql://postgres:postgres123@host.docker.internal:5432/bankverse"
+  secretKey: "bankverse-secret-key"
+  algorithm: "HS256"
+  accessTokenExpireMinutes: "30"
