@@ -6,10 +6,16 @@ image:
   pullPolicy: IfNotPresent
 
 service:
+  name: bankverse-service
   type: NodePort
   port: 8000
   targetPort: 8000
   nodePort: 30080
+
+ingress:
+  enabled: true
+  name: bankverse-ingress
+  className: nginx
 
 resources:
   requests:
